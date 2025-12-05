@@ -6,6 +6,8 @@ import router from './routers/user.router.js';
 import cors from 'cors';
 import productRouter from './routers/product.router.js';
 import cartRouter from './routers/cart.router.js';
+import addressRouter from './routers/address.router.js';
+import orderRouter from './routers/order.router.js';
 dotenv.config();
 const app = express();
 app.use(cors({
@@ -17,6 +19,8 @@ app.use(cookieParser());
 app.use('/api/auth', router);
 app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
+app.use('/api/orders', orderRouter);
 app.get('/', (req, res) => {
   res.send('TricToys Backend is running');
 });

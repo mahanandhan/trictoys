@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedForBuy, setSelectedForBuy] = useState([]);
+
+  const navigate = useNavigate();
 
   // Fetch cart from backend
   useEffect(() => {
@@ -18,10 +22,11 @@ const CartPage = () => {
           name: item.name,
           price: item.price,
           image: item.imageUrl || "/placeholder.jpg",
-          qty: item.quantity,
+          qty: item.quantity > 0 ? item.quantity : 1, // ALWAYS MIN 1
         }));
 
         setItems(backendItems);
+        setSelectedForBuy(backendItems); // default select all
       } catch (err) {
         console.error("Failed to load cart:", err);
       } finally {
@@ -32,55 +37,57 @@ const CartPage = () => {
     fetchCart();
   }, []);
 
-  // Increase/Decrease Quantity
+  // Increase/Decrease Quantity Logic
   const changeQty = async (id, delta) => {
     const item = items.find((i) => i.id === id);
     if (!item) return;
 
-    const newQty = Math.max(0, item.qty + delta);
+    const newQty = item.qty + delta;
 
     try {
-      if (newQty === 0) {
-        // Remove from backend cart
+      if (newQty <= 0) {
+        // Remove item from cart
         await axios.post(
           "http://localhost:5000/api/cart/remove",
           { productId: id },
           { withCredentials: true }
         );
-      } else {
-        // Update quantity in backend
-        await axios.post(
-          "http://localhost:5000/api/cart/update",
-          { productId: id, quantity: newQty },
-          { withCredentials: true }
-        );
+
+        setItems((prev) => prev.filter((it) => it.id !== id));
+        setSelectedForBuy((prev) => prev.filter((it) => it.id !== id));
+        return;
       }
+
+      // Update in backend
+      await axios.post(
+        "http://localhost:5000/api/cart/update",
+        { productId: id, quantity: newQty },
+        { withCredentials: true }
+      );
 
       // Update UI
       setItems((prev) =>
-        newQty === 0
-          ? prev.filter((it) => it.id !== id) // REMOVE item when qty becomes 0
-          : prev.map((it) =>
-              it.id === id ? { ...it, qty: newQty } : it
-            )
+        prev.map((it) => (it.id === id ? { ...it, qty: newQty } : it))
+      );
+
+      // Update buy list
+      setSelectedForBuy((prev) =>
+        prev.map((it) => (it.id === id ? { ...it, qty: newQty } : it))
       );
     } catch (err) {
       console.error("Failed to update cart:", err);
     }
   };
 
-  // Subtotal
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.qty,
-    0
-  );
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-  if (loading) return <div className="p-10 text-center">Loading cart...</div>;
+  if (loading)
+    return <div className="p-10 text-center">Loading cart...</div>;
 
   return (
     <div className="min-h-screen w-full bg-linear-to-br from-sky-50 to-slate-50 px-4 py-8 flex justify-center">
       <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
-
+        
         {/* LEFT CART LIST */}
         <div className="flex-1 bg-white rounded-3xl shadow-lg p-6 md:p-8">
           <h1 className="text-xl md:text-2xl font-semibold text-slate-900 mb-4">
@@ -113,12 +120,12 @@ const CartPage = () => {
                     </p>
                   </div>
 
+                  {/* Qty */}
                   <div className="flex flex-col items-end gap-2">
                     <span className="text-sm font-semibold text-emerald-500">
                       ₹{item.price * item.qty}
                     </span>
 
-                    {/* Qty buttons */}
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => changeQty(item.id, -1)}
@@ -126,9 +133,11 @@ const CartPage = () => {
                       >
                         −
                       </button>
+
                       <span className="w-8 text-center text-sm font-semibold text-slate-800">
                         {item.qty}
                       </span>
+
                       <button
                         onClick={() => changeQty(item.id, 1)}
                         className="h-8 w-8 rounded-full bg-sky-500 text-white flex items-center justify-center text-lg"
@@ -145,13 +154,16 @@ const CartPage = () => {
 
         {/* RIGHT SUMMARY */}
         <aside className="w-full lg:w-80 bg-white rounded-3xl shadow-lg p-6 md:p-7 h-fit">
-          <h2 className="text-lg font-semibold text-slate-900 mb-4">Order Summary</h2>
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">
+            Order Summary
+          </h2>
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-slate-500">Items total</span>
               <span className="font-medium text-slate-800">₹{subtotal}</span>
             </div>
+
             <div className="flex justify-between">
               <span className="text-slate-500">Delivery</span>
               <span className="font-medium text-emerald-500">Free</span>
@@ -168,11 +180,14 @@ const CartPage = () => {
           </div>
 
           <button
-            disabled={subtotal === 0}
-            className={`w-full py-3 rounded-full text-sm font-semibold shadow-[0_0_20px_rgba(56,189,248,0.6)] ${
-              subtotal === 0
+            onClick={() =>
+              navigate("/payment", { state: { products: selectedForBuy } })
+            }
+            disabled={selectedForBuy.length === 0}
+            className={`w-full py-3 rounded-full text-sm font-semibold ${
+              selectedForBuy.length === 0
                 ? "bg-slate-200 text-slate-500 cursor-not-allowed"
-                : "bg-sky-500 text-white hover:brightness-110"
+                : "bg-sky-500 text-white hover:brightness-110 shadow-[0_0_20px_rgba(56,189,248,0.6)]"
             }`}
           >
             Buy All

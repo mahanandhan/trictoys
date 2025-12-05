@@ -11,8 +11,11 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/products/allproducts", { withCredentials: true });
-        // If your backend returns products in res.data.products, adjust accordingly
+        const res = await axios.get(
+          "http://localhost:5000/api/products/allproducts",
+          { withCredentials: true }
+        );
+        // adjust if your API shape is different
         setProducts(res.data);
       } catch (error) {
         console.error("Failed to fetch products:", error);
@@ -25,21 +28,23 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen w-full flex flex-col bg-linear-to-br from-sky-50 to-slate-50">
+    <div className="min-h-screen w-full flex flex-col bg-linear-to-br from-sky-50 to-slate-50 pb-14 md:pb-0">
       <Navbar />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1">
         <Sidebar />
 
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
-          <div className="flex items-center justify-between mb-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-xl font-semibold text-slate-900">Toys</h1>
+              <h1 className="text-lg md:text-xl font-semibold text-slate-900">
+                Toys
+              </h1>
               <p className="text-xs text-slate-500 mt-1">
                 Choose from our latest collection of professional toys.
               </p>
             </div>
-            <div className="flex gap-3 text-xs">
+            <div className="flex flex-wrap gap-2 text-xs">
               <button className="px-4 py-2 rounded-full bg-sky-500 text-white font-semibold">
                 All
               </button>
@@ -53,9 +58,9 @@ const Dashboard = () => {
           </div>
 
           {loading ? (
-            <p className="text-slate-500">Loading products...</p>
+            <p className="text-slate-500 text-sm">Loading products...</p>
           ) : (
-            <section className="grid gap-5 md:grid-cols-3 xl:grid-cols-4">
+            <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {products.map((p) => (
                 <ProductCard key={p._id} product={p} />
               ))}
