@@ -26,7 +26,7 @@ const ProductList = () => {
         try {
             setLoading(true);
             const res = await axios.get(
-                "http://localhost:5000/api/products/allproducts",
+                "https://trictoys.onrender.com/api/products/allproducts",
                 { withCredentials: true }
             );
             setProducts(res.data);
@@ -56,7 +56,7 @@ const ProductList = () => {
     const deleteProduct = async (id) => {
         try {
             await axios.delete(
-                `http://localhost:5000/api/products/delete/${id}`,
+                `https://trictoys.onrender.com/api/products/delete/${id}`,
                 { withCredentials: true }
             );
             fetchProducts();
@@ -71,7 +71,7 @@ const ProductList = () => {
     const deleteSelectedProducts = async () => {
         for (let id of selectedProducts) {
             await axios.delete(
-                `http://localhost:5000/api/products/delete/${id}`,
+                `https://trictoys.onrender.com/api/products/delete/${id}`,
                 { withCredentials: true }
             );
         }
@@ -101,7 +101,7 @@ const ProductList = () => {
         e.preventDefault();
         try {
             await axios.put(
-                `http://localhost:5000/api/products/update/${editData._id}`,
+                `https://trictoys.onrender.com/api/products/update/${editData._id}`,
                 editData,
                 { withCredentials: true }
             );

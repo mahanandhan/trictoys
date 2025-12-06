@@ -10,7 +10,7 @@ const ViewDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/${productId}`);
+        const res = await axios.get(`https://trictoys.onrender.com/api/products/${productId}`);
         setProduct(res.data);
       } catch (err) {
         console.error("Failed to load product:", err);

@@ -13,7 +13,7 @@ const CartPage = () => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/cart", {
+        const res = await axios.get("https://trictoys.onrender.com/api/cart", {
           withCredentials: true,
         });
 
@@ -48,7 +48,7 @@ const CartPage = () => {
       if (newQty <= 0) {
         // Remove item from cart
         await axios.post(
-          "http://localhost:5000/api/cart/remove",
+          "https://trictoys.onrender.com/api/cart/remove",
           { productId: id },
           { withCredentials: true }
         );
@@ -60,7 +60,7 @@ const CartPage = () => {
 
       // Update in backend
       await axios.post(
-        "http://localhost:5000/api/cart/update",
+        "https://trictoys.onrender.com/api/cart/update",
         { productId: id, quantity: newQty },
         { withCredentials: true }
       );

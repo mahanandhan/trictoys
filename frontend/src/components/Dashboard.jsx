@@ -12,7 +12,7 @@ const Dashboard = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/products/allproducts",
+          "https://trictoys.onrender.com/api/products/allproducts",
           { withCredentials: true }
         );
         setProducts(res.data);

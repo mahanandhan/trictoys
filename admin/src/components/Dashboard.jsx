@@ -11,7 +11,7 @@ const Dashboard = () => {
   // Fetch All Orders
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders/all", {
+      const res = await axios.get("https://trictoys.onrender.com/api/orders/all", {
         withCredentials: true,
       });
       setOrders(res.data);
@@ -26,7 +26,7 @@ const Dashboard = () => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/orders/status/${orderId}`,
+        `https://trictoys.onrender.com/api/orders/status/${orderId}`,
         { status: newStatus },
         { withCredentials: true }
       );

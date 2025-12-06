@@ -16,7 +16,7 @@ const BuyPage = () => {
     const fetchAddresses = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/address/getAddress",
+          "https://trictoys.onrender.com/api/address/getAddress",
           {
             withCredentials: true,
           }
@@ -45,7 +45,7 @@ const BuyPage = () => {
       }));
 
       const res = await axios.post(
-        "http://localhost:5000/api/orders/place",
+        "https://trictoys.onrender.com/api/orders/place",
         {
           addressId: selectedAddressId,
           products,

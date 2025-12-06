@@ -23,7 +23,7 @@ const AddressPage = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/address/addAddress",
+        "https://trictoys.onrender.com/api/address/addAddress",
         form,
         { withCredentials: true }
       );

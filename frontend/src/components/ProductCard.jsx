@@ -13,7 +13,7 @@ const ProductCard = ({ product }) => {
   useEffect(() => {
     const checkCart = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/cart", {
+        const res = await axios.get("https://trictoys.onrender.com/api/cart", {
           withCredentials: true,
         });
         const cartProducts = res.data.products || [];
@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
     setLoading(true);
     try {
       await axios.post(
-        "http://localhost:5000/api/cart/add",
+        "https://trictoys.onrender.com/api/cart/add",
         { productId: product._id, quantity: 1 },
         { withCredentials: true }
       );
@@ -54,7 +54,7 @@ const ProductCard = ({ product }) => {
     setLoading(true);
     try {
       await axios.post(
-        "http://localhost:5000/api/cart/remove",
+        "https://trictoys.onrender.com/api/cart/remove",
         { productId: product._id },
         { withCredentials: true }
       );

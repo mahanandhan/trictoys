@@ -7,7 +7,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/orders/myorders",
+        "https://trictoys.onrender.com/api/orders/myorders",
         { withCredentials: true }
       );
       setOrders(Array.isArray(res.data) ? res.data : []);
@@ -21,7 +21,7 @@ const Orders = () => {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/orders/remove/${id}`,
+        `https://trictoys.onrender.com/api/orders/remove/${id}`,
         { withCredentials: true }
       );
       setOrders((prev) => prev.filter((o) => o._id !== id));
