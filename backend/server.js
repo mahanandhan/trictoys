@@ -11,7 +11,7 @@ import orderRouter from './routers/order.router.js';
 dotenv.config();
 const app = express();
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174", "https://trictoys.vercel.app/", "https://trictoys-admin.vercel.app/"], // your frontend origin
+    origin: ["http://localhost:5173", "http://localhost:5174", "https://trictoys.vercel.app", "https://trictoys-admin.vercel.app"], // your frontend origin
     credentials: true, 
 }));
 app.use(express.json());
