@@ -15,7 +15,6 @@ const Dashboard = () => {
           "http://localhost:5000/api/products/allproducts",
           { withCredentials: true }
         );
-        // adjust if your API shape is different
         setProducts(res.data);
       } catch (error) {
         console.error("Failed to fetch products:", error);
@@ -35,6 +34,7 @@ const Dashboard = () => {
         <Sidebar />
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
+          {/* Header and Filters */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-lg md:text-xl font-semibold text-slate-900">
@@ -44,7 +44,7 @@ const Dashboard = () => {
                 Choose from our latest collection of professional toys.
               </p>
             </div>
-            <div className="flex flex-wrap gap-2 text-xs">
+            {/* <div className="flex flex-wrap gap-2 text-xs">
               <button className="px-4 py-2 rounded-full bg-sky-500 text-white font-semibold">
                 All
               </button>
@@ -54,15 +54,15 @@ const Dashboard = () => {
               <button className="px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-600">
                 Plush
               </button>
-            </div>
+            </div> */}
           </div>
 
           {loading ? (
             <p className="text-slate-500 text-sm">Loading products...</p>
           ) : (
             <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((p) => (
-                <ProductCard key={p._id} product={p} />
+              {products.map((product) => (
+                <ProductCard key={product._id} product={product} />
               ))}
             </section>
           )}

@@ -45,8 +45,8 @@ const Orders = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex justify-center bg-gradient-to-br from-sky-400 via-sky-200 to-sky-500 px-4 py-8">
-      <div className="w-full max-w-5xl bg-white/80 backdrop-blur-2xl rounded-[32px] shadow-2xl p-6 md:p-8">
+    <div className="min-h-screen w-full flex justify-center bg-linear-to-br from-sky-400 via-sky-200 to-sky-500 px-4 py-8">
+      <div className="w-full max-w-5xl bg-white/80 backdrop-blur-2xl rounded-4xl shadow-2xl p-6 md:p-8">
         <h1 className="text-2xl md:text-3xl font-bold mb-6 text-slate-900">
           Past Toy Orders
         </h1>

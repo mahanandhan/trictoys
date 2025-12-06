@@ -13,7 +13,7 @@ const orderSchema = new mongoose.Schema({
   address: { type: mongoose.Schema.Types.ObjectId, ref: "Address", required: true },
   paymentMethod: { type: String, enum: ["COD"], default: "COD" },
   totalAmount: { type: Number, required: true },
-  status: { type: String, enum: ["Pending", "Completed"], default: "Pending" },
+  status: { type: String, enum: ["Pending", "Completed", "Shipped"], default: "Pending" },
 }, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);

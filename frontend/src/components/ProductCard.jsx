@@ -7,6 +7,8 @@ const ProductCard = ({ product }) => {
   const [inCart, setInCart] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const outOfStock = product.stock === 0;
+
   // Check if product is already in cart
   useEffect(() => {
     const checkCart = async () => {
@@ -14,7 +16,6 @@ const ProductCard = ({ product }) => {
         const res = await axios.get("http://localhost:5000/api/cart", {
           withCredentials: true,
         });
-        // res.data.products should be an array of products in cart
         const cartProducts = res.data.products || [];
         const exists = cartProducts.some((p) => p.product === product._id);
         setInCart(exists);
@@ -66,30 +67,41 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm hover:shadow-md transition p-4 flex flex-col">
+    <div className="relative bg-white rounded-3xl shadow-sm hover:shadow-md transition p-4 flex flex-col">
+      {/* Out of Stock Badge */}
+      {outOfStock && (
+        <span className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+          Out of Stock
+        </span>
+      )}
+
+      {/* Product Image */}
       <div className="rounded-2xl h-40 mb-4 flex items-center justify-center overflow-hidden">
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
-            alt={product.name}
+            alt={product.productname}
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="text-5xl">{product.image || "🧸"}</span>
+          <span className="text-5xl">🧸</span>
         )}
       </div>
 
+      {/* Product Info */}
       <div className="flex-1">
         <h3 className="text-sm font-semibold text-slate-900">{product.productname}</h3>
+        <p className="text-xs text-slate-500 mt-1">{product.description}</p>
         <p className="text-xs text-slate-500 mt-1">₹{product.price}</p>
         <p className="text-xs text-slate-500 mt-1">{product.stock} in stock</p>
       </div>
 
+      {/* Action Buttons */}
       <div className="mt-4 flex gap-2">
         {inCart ? (
           <button
             onClick={handleRemoveFromCart}
-            disabled={loading}
+            disabled={loading || outOfStock}
             className="flex-1 py-2 rounded-full bg-red-500 text-white text-xs font-semibold hover:brightness-110"
           >
             {loading ? "Removing..." : "Remove from Cart"}
@@ -97,15 +109,17 @@ const ProductCard = ({ product }) => {
         ) : (
           <button
             onClick={handleAddToCart}
-            disabled={loading}
-            className="flex-1 py-2 rounded-full bg-teal-400 text-white text-xs font-semibold hover:brightness-110"
+            disabled={loading || outOfStock}
+            className={`flex-1 py-2 rounded-full text-white text-xs font-semibold hover:brightness-110 ${
+              outOfStock ? "bg-gray-300 cursor-not-allowed" : "bg-teal-400"
+            }`}
           >
-            {loading ? "Adding..." : "Add to Cart"}
+            {loading ? "Adding..." : outOfStock ? "Out of Stock" : "Add to Cart"}
           </button>
         )}
 
         <button
-          onClick={() => navigate("/viewdetails")}
+          onClick={() => navigate(`/viewdetails/${product._id}`)}
           className="flex-1 py-2 rounded-full border border-teal-300 text-teal-500 text-xs font-semibold bg-white hover:bg-teal-50"
         >
           View Details

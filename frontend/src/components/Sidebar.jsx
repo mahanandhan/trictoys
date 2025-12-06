@@ -28,10 +28,15 @@ const Sidebar = () => {
             <span>orders</span>
           </button>
 
-          <button className="w-full flex items-center gap-3 px-5 py-3 text-slate-300 hover:bg-white/5">
+          <button onClick={() => navigate('/profile')} className="w-full flex items-center gap-3 px-5 py-3 text-slate-300 hover:bg-white/5">
+            <span>👤</span>
+            <span>Profile</span>
+          </button>
+
+          {/* <button className="w-full flex items-center gap-3 px-5 py-3 text-slate-300 hover:bg-white/5">
             <span>🎁</span>
             <span>Promotions</span>
-          </button>
+          </button> */}
         </nav>
 
         <div className="px-5 py-4 text-xs text-slate-400 border-t border-white/5">
@@ -61,6 +66,10 @@ const Sidebar = () => {
         >
           <span>🛒</span>
           <span>orders</span>
+        </button>
+        <button className="flex flex-col items-center gap-1" onClick={() => navigate("/profile")}>
+          <span>👤</span>
+          <span>Profile</span>
         </button>
       </nav>
     </>

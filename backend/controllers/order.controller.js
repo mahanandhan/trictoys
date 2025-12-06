@@ -121,3 +121,55 @@ export const removeOrder = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email")     // show user info
+      .populate("products.product")       // show product info
+      .populate("address");
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Get all orders error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    // Validate status
+    const validStatuses = ["Pending", "Shipped", "Completed"];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    // Update order
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { status },
+      { new: true }
+    )
+      .populate("user", "name email")
+      .populate("products.product")
+      .populate("address");
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.status(200).json({
+      message: "Order status updated",
+      order: updatedOrder,
+    });
+
+  } catch (error) {
+    console.error("Update order status error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
